@@ -60,6 +60,27 @@ var (
 const dom = "whoami.miek.nl."
 
 func handleReflect(w dns.ResponseWriter, r *dns.Msg) {
+
+	connAccess, ok := w.(dns.ExposesUnderlyingConns)
+	if !ok {
+		log.Fatal("did not get an underlying conns interface")
+	}
+
+	// UDP packets don't give us enough to work with, ask the client to retry with TCP.
+	if connAccess.IncomingPacketConn() != nil {
+		log.Println("Punt UDP request in favor of TCP", "query", r)
+		r := new(dns.Msg)
+		defer func() {
+			if err := w.WriteMsg(r); err != nil {
+				log.Println("error writing response", "error", err)
+			}
+		}()
+		r.SetReply(r)
+		r.Rcode = dns.RcodeSuccess
+		r.Authoritative = true
+		r.Truncated = true
+		return
+	}
 	var (
 		v4  bool
 		rr  dns.RR
