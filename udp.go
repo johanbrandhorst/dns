@@ -51,9 +51,9 @@ func ReadFromSessionUDP(conn *net.UDPConn, b []byte) (int, *SessionUDP, error) {
 	if err != nil {
 		return n, nil, err
 	}
-	if err = fishForConnectionUid("ReadFromSessionUDP", conn, raddr); err != nil {
-		return n, nil, err
-	}
+	// if err = fishForConnectionUid("ReadFromSessionUDP", conn, raddr); err != nil {
+	// 	return n, nil, err
+	// }
 	return n, &SessionUDP{raddr, oob[:oobn]}, err
 }
 
@@ -64,9 +64,9 @@ func WriteToSessionUDP(conn *net.UDPConn, b []byte, session *SessionUDP) (int, e
 	if err != nil {
 		return n, err
 	}
-	if err = fishForConnectionUid("WriteToSessionUDP", conn, session.raddr); err != nil {
-		return n, err
-	}
+	// if err = fishForConnectionUid("WriteToSessionUDP", conn, session.raddr); err != nil {
+	// 	return n, err
+	// }
 	return n, err
 }
 
