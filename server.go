@@ -344,7 +344,7 @@ func (srv *Server) ListenAndServe() error {
 		unlock()
 		return srv.serveTCP(l)
 	case "udp", "udp4", "udp6":
-		l, err := listenUDP(srv.Net, addr, srv.ReusePort, srv.ReusePort)
+		l, err := listenUDP(srv.Net, addr, srv.ReusePort, srv.ReuseAddr)
 		if err != nil {
 			return err
 		}
